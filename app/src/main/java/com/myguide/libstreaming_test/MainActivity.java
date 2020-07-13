@@ -1,7 +1,8 @@
 package com.myguide.libstreaming_test;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 import net.majorkernelpanic.streaming.MediaStream;
 import net.majorkernelpanic.streaming.Session;
 import net.majorkernelpanic.streaming.SessionBuilder;
@@ -29,12 +30,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
+import android.graphics.Bitmap;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.LinearLayoutCompat;
+
+import com.google.zxing.WriterException;
 
 public class MainActivity extends Activity implements
         OnClickListener,
@@ -45,23 +54,13 @@ public class MainActivity extends Activity implements
 
     public final static String TAG = "MainActivity";
 
-    private Button mButtonSave;
-    private Button mButtonVideo;
+
     private ImageButton mButtonStart;
-    private ImageButton mButtonFlash;
-    private ImageButton mButtonCamera;
-    private ImageButton mButtonSettings;
-    private RadioGroup mRadioGroup;
-    private FrameLayout mLayoutVideoSettings;
-    private FrameLayout mLayoutServerSettings;
     private SurfaceView mSurfaceView;
     private TextView mTextBitrate;
-    private EditText mEditTextURI;
-    private EditText mEditTextPassword;
-    private EditText mEditTextUsername;
-    private ProgressBar mProgressBar;
     private Session mSession;
     private RtspClient mClient;
+    private ImageView mimageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,42 +80,18 @@ public class MainActivity extends Activity implements
                 .setContext(getApplicationContext())
                 .setAudioEncoder(SessionBuilder.AUDIO_AAC)
                 .setVideoEncoder(SessionBuilder.VIDEO_NONE);
-        // Starts the RTSP server
-        this.startService(new Intent(this, RtspServer.class));
+
         //--------------------------------------------------end>
 
-        mButtonVideo = (Button) findViewById(R.id.video);
-        mButtonSave = (Button) findViewById(R.id.save);
+        //get by id
+        mimageView= (ImageView) findViewById(R.id.img_qr);
         mButtonStart = (ImageButton) findViewById(R.id.start);
-        mButtonFlash = (ImageButton) findViewById(R.id.flash);
-        mButtonCamera = (ImageButton) findViewById(R.id.camera);
-        mButtonSettings = (ImageButton) findViewById(R.id.settings);
         mSurfaceView = (SurfaceView) findViewById(R.id.surface);
-        mEditTextURI = (EditText) findViewById(R.id.uri);
-        mEditTextUsername = (EditText) findViewById(R.id.username);
-        mEditTextPassword = (EditText) findViewById(R.id.password);
         mTextBitrate = (TextView) findViewById(R.id.bitrate);
-        mLayoutVideoSettings = (FrameLayout) findViewById(R.id.video_layout);
-        mLayoutServerSettings = (FrameLayout) findViewById(R.id.server_layout);
-        mRadioGroup =  (RadioGroup) findViewById(R.id.radio);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-
-        mRadioGroup.setOnCheckedChangeListener(this);
-        mRadioGroup.setOnClickListener(this);
 
         mButtonStart.setOnClickListener(this);
-        mButtonSave.setOnClickListener(this);
-        mButtonFlash.setOnClickListener(this);
-        mButtonCamera.setOnClickListener(this);
-        mButtonVideo.setOnClickListener(this);
-        mButtonSettings.setOnClickListener(this);
-        mButtonFlash.setTag("off");
 
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        if (mPrefs.getString("uri", null) != null) mLayoutServerSettings.setVisibility(View.GONE);
-        mEditTextURI.setText(mPrefs.getString("uri", getString(R.string.default_stream)));
-        mEditTextPassword.setText(mPrefs.getString("password", ""));
-        mEditTextUsername.setText(mPrefs.getString("username", ""));
 
         // Configures the SessionBuilder
         mSession = SessionBuilder.getInstance()
@@ -145,53 +120,19 @@ public class MainActivity extends Activity implements
 
         mSurfaceView.getHolder().addCallback(this);
 
-        selectQuality();
 
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        mLayoutVideoSettings.setVisibility(View.GONE);
-        mLayoutServerSettings.setVisibility(View.VISIBLE);
-        selectQuality();
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start:
-                mLayoutServerSettings.setVisibility(View.GONE);
                 toggleStream();
-                break;
-            case R.id.flash:
-                if (mButtonFlash.getTag().equals("on")) {
-                    mButtonFlash.setTag("off");
-                    mButtonFlash.setImageResource(R.drawable.ic_flash_on_holo_light);
-                } else {
-                    mButtonFlash.setImageResource(R.drawable.ic_flash_off_holo_light);
-                    mButtonFlash.setTag("on");
-                }
-                mSession.toggleFlash();
-                break;
-            case R.id.camera:
-                mSession.switchCamera();
-                break;
-            case R.id.settings:
-                if (mLayoutVideoSettings.getVisibility() == View.GONE &&
-                        mLayoutServerSettings.getVisibility() == View.GONE) {
-                    mLayoutServerSettings.setVisibility(View.VISIBLE);
-                } else {
-                    mLayoutServerSettings.setVisibility(View.GONE);
-                    mLayoutVideoSettings.setVisibility(View.GONE);
-                }
-                break;
-            case R.id.video:
-                mRadioGroup.clearCheck();
-                mLayoutServerSettings.setVisibility(View.GONE);
-                mLayoutVideoSettings.setVisibility(View.VISIBLE);
-                break;
-            case R.id.save:
-                mLayoutServerSettings.setVisibility(View.GONE);
                 break;
         }
     }
@@ -204,49 +145,28 @@ public class MainActivity extends Activity implements
         mSurfaceView.getHolder().removeCallback(this);
     }
 
-    private void selectQuality() {
-        int id = mRadioGroup.getCheckedRadioButtonId();
-        RadioButton button = (RadioButton) findViewById(id);
-        if (button == null) return;
 
-        String text = button.getText().toString();
-        Pattern pattern = Pattern.compile("(\\d+)x(\\d+)\\D+(\\d+)\\D+(\\d+)");
-        Matcher matcher = pattern.matcher(text);
-
-        matcher.find();
-        int width = Integer.parseInt(matcher.group(1));
-        int height = Integer.parseInt(matcher.group(2));
-        int framerate = Integer.parseInt(matcher.group(3));
-        int bitrate = Integer.parseInt(matcher.group(4))*1000;
-
-        mSession.setVideoQuality(new VideoQuality(width, height, framerate, bitrate));
-        Toast.makeText(this, ((RadioButton)findViewById(id)).getText(), Toast.LENGTH_SHORT).show();
-
-        Log.d(TAG, "Selected resolution: "+width+"x"+height);
-    }
 
     private void enableUI() {
         mButtonStart.setEnabled(true);
-        mButtonCamera.setEnabled(true);
     }
 
     // Connects/disconnects to the RTSP server and starts/stops the stream
     public void toggleStream() {
-        mProgressBar.setVisibility(View.VISIBLE);
         if (!mClient.isStreaming()) {
             String ip,port,path;
 
             // We save the content user inputs in Shared Preferences
             SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
             Editor editor = mPrefs.edit();
-            editor.putString("uri", mEditTextURI.getText().toString());
-            editor.putString("password", mEditTextPassword.getText().toString());
-            editor.putString("username", mEditTextUsername.getText().toString());
+            editor.putString("uri", "rtsp://127.0.0.1:1234/test");
+            editor.putString("password", "");
+            editor.putString("username", "test");
             editor.commit();
 
             // We parse the URI written in the Editext
             Pattern uri = Pattern.compile("rtsp://(.+):(\\d*)/(.+)");
-            Matcher m = uri.matcher(mEditTextURI.getText()); m.find();
+            Matcher m = uri.matcher("rtsp://127.0.0.1:1234/test"); m.find();
             ip = m.group(1);
             port = m.group(2);
             path = m.group(3);
@@ -254,6 +174,8 @@ public class MainActivity extends Activity implements
             //mClient.setCredentials(mEditTextUsername.getText().toString(), mEditTextPassword.getText().toString());
             mClient.setServerAddress(ip, Integer.parseInt(port));
             //mClient.setStreamPath("/"+path);
+            // Starts the RTSP server
+            this.startService(new Intent(this, RtspServer.class));
             mClient.startStream();
 
         } else {
@@ -280,14 +202,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onPreviewStarted() {
-        if (mSession.getCamera() == CameraInfo.CAMERA_FACING_FRONT) {
-            mButtonFlash.setEnabled(false);
-            mButtonFlash.setTag("off");
-            mButtonFlash.setImageResource(R.drawable.ic_flash_on_holo_light);
-        }
-        else {
-            mButtonFlash.setEnabled(true);
-        }
+
     }
 
     @Override
@@ -298,35 +213,32 @@ public class MainActivity extends Activity implements
     @Override
     public void onSessionStarted() {
         enableUI();
-        mButtonStart.setImageResource(R.drawable.ic_switch_video_active);
-        mProgressBar.setVisibility(View.GONE);
+        mButtonStart.setImageResource(R.drawable.icon_audio_active);
+        String url= URL();
+        putQR(url);
+        Toast.makeText(MainActivity.this,url,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onSessionStopped() {
+        // stop the RTSP server
+        this.stopService(new Intent(this, RtspServer.class));
+        mimageView.setImageResource(0);
         enableUI();
-        mButtonStart.setImageResource(R.drawable.ic_switch_video);
-        mProgressBar.setVisibility(View.GONE);
+        mButtonStart.setImageResource(R.drawable.icon_audio);
     }
 
     @Override
     public void onSessionError(int reason, int streamType, Exception e) {
-        mProgressBar.setVisibility(View.GONE);
         switch (reason) {
             case Session.ERROR_CAMERA_ALREADY_IN_USE:
-                break;
-            case Session.ERROR_CAMERA_HAS_NO_FLASH:
-                mButtonFlash.setImageResource(R.drawable.ic_flash_on_holo_light);
-                mButtonFlash.setTag("off");
                 break;
             case Session.ERROR_INVALID_SURFACE:
                 break;
             case Session.ERROR_STORAGE_NOT_READY:
                 break;
             case Session.ERROR_CONFIGURATION_NOT_SUPPORTED:
-                VideoQuality quality = mSession.getVideoTrack().getVideoQuality();
                 logError("The following settings are not supported on this phone: "+
-                        quality.toString()+" "+
                         "("+e.getMessage()+")");
                 e.printStackTrace();
                 return;
@@ -345,7 +257,6 @@ public class MainActivity extends Activity implements
         switch (message) {
             case RtspClient.ERROR_CONNECTION_FAILED:
             case RtspClient.ERROR_WRONG_CREDENTIALS:
-                mProgressBar.setVisibility(View.GONE);
                 enableUI();
                 logError(e.getMessage());
                 e.printStackTrace();
@@ -367,5 +278,23 @@ public class MainActivity extends Activity implements
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         mClient.stopStream();
+    }
+
+    public String URL(){
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        String URL= "rtsp://"+ipAddress+":1234/test";
+        return URL;
+    }
+    public void putQR(String URL){
+        QRGEncoder  qrgEncoder = new QRGEncoder(URL, null, QRGContents.Type.TEXT, 300);
+        try {
+            // Getting QR-Code as Bitmap
+            Bitmap bitmap = qrgEncoder.encodeAsBitmap();
+            // Setting Bitmap to ImageView
+            mimageView.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
     }
 }

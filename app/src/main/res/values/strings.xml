@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">example3</string>
+    <string name="app_name">myGuide_guide</string>
     <string name="start">Start/Stop Streaming</string>
     <string name="flash">Flash</string>
     <string name="camera">Camera</string>
