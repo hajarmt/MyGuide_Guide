@@ -1,4 +1,5 @@
 package com.myguide.libstreaming_test;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import android.net.wifi.WifiManager;
@@ -10,29 +11,21 @@ import net.majorkernelpanic.streaming.audio.AudioQuality;
 import net.majorkernelpanic.streaming.gl.SurfaceView;
 import net.majorkernelpanic.streaming.rtsp.RtspClient;
 import net.majorkernelpanic.streaming.rtsp.RtspServer;
-import net.majorkernelpanic.streaming.video.VideoQuality;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -41,7 +34,6 @@ import androidmads.library.qrgenearator.QRGEncoder;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.google.zxing.WriterException;
 
@@ -49,8 +41,7 @@ public class MainActivity extends Activity implements
         OnClickListener,
         RtspClient.Callback,
         Session.Callback,
-        SurfaceHolder.Callback,
-        OnCheckedChangeListener {
+        SurfaceHolder.Callback{
 
     public final static String TAG = "MainActivity";
 
@@ -68,20 +59,6 @@ public class MainActivity extends Activity implements
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
-        //---------------------------------------------server
-        // Sets the port of the RTSP server to 1234
-        Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(RtspServer.KEY_PORT, String.valueOf(1234));
-        //editor.putString(RtspServer.USER_SERVICE, "test"); //Why!!
-        editor.commit();
-
-        // Configures the SessionBuilder
-        SessionBuilder.getInstance()
-                .setContext(getApplicationContext())
-                .setAudioEncoder(SessionBuilder.AUDIO_AAC)
-                .setVideoEncoder(SessionBuilder.VIDEO_NONE);
-
-        //--------------------------------------------------end>
 
         //get by id
         mimageView= (ImageView) findViewById(R.id.img_qr);
@@ -91,8 +68,7 @@ public class MainActivity extends Activity implements
 
         mButtonStart.setOnClickListener(this);
 
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-
+        //SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         // Configures the SessionBuilder
         mSession = SessionBuilder.getInstance()
                 .setContext(getApplicationContext())
@@ -108,23 +84,8 @@ public class MainActivity extends Activity implements
         mClient.setSession(mSession);
         mClient.setCallback(this);
 
-        // Use this to force streaming with the MediaRecorder API
-        //mSession.getVideoTrack().setStreamingMethod(MediaStream.MODE_MEDIARECORDER_API);
-
-        // Use this to stream over TCP, EXPERIMENTAL!
-        //mClient.setTransportMode(RtspClient.TRANSPORT_TCP);
-
-        // Use this if you want the aspect ratio of the surface view to
-        // respect the aspect ratio of the camera preview
-        //mSurfaceView.setAspectRatioMode(SurfaceView.ASPECT_RATIO_PREVIEW);
-
         mSurfaceView.getHolder().addCallback(this);
 
-
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
 
     }
 
@@ -146,41 +107,43 @@ public class MainActivity extends Activity implements
     }
 
 
-
-    private void enableUI() {
-        mButtonStart.setEnabled(true);
-    }
-
     // Connects/disconnects to the RTSP server and starts/stops the stream
     public void toggleStream() {
         if (!mClient.isStreaming()) {
-            String ip,port,path;
+                String ip,port,path;
+                // We save the content user inputs in Shared Preferences
+                SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                Editor editor = mPrefs.edit();
+                editor.putString("uri", "rtsp://127.0.0.1:9999/test");
+                editor.putString("password", "");
+                editor.putString("username", "");
+                editor.commit();
 
-            // We save the content user inputs in Shared Preferences
-            SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            Editor editor = mPrefs.edit();
-            editor.putString("uri", "rtsp://127.0.0.1:1234/test");
-            editor.putString("password", "");
-            editor.putString("username", "test");
-            editor.commit();
+                // We parse the URI written in the Editext
+                Pattern uri = Pattern.compile("rtsp://(.+):(\\d*)/(.+)");
+                Matcher m = uri.matcher("rtsp://127.0.0.1:9999/test"); m.find();
+                ip = m.group(1);
+                port = m.group(2);
+                path = m.group(3);
 
-            // We parse the URI written in the Editext
-            Pattern uri = Pattern.compile("rtsp://(.+):(\\d*)/(.+)");
-            Matcher m = uri.matcher("rtsp://127.0.0.1:1234/test"); m.find();
-            ip = m.group(1);
-            port = m.group(2);
-            path = m.group(3);
-
-            //mClient.setCredentials(mEditTextUsername.getText().toString(), mEditTextPassword.getText().toString());
-            mClient.setServerAddress(ip, Integer.parseInt(port));
-            //mClient.setStreamPath("/"+path);
-            // Starts the RTSP server
-            this.startService(new Intent(this, RtspServer.class));
-            mClient.startStream();
+                mClient.setServerAddress(ip, Integer.parseInt(port));
+                mClient.setStreamPath("/"+path);
+                // start the RTSP server
+                this.startService(new Intent(this, RtspServerService.class));
+                mClient.startStream();
+                mButtonStart.setImageResource(R.drawable.icon_audio_active);
+                String url= URL();
+                putQR(url);
+                Toast.makeText(MainActivity.this,url,Toast.LENGTH_LONG).show();
 
         } else {
             // Stops the stream and disconnects from the RTSP server
             mClient.stopStream();
+            // stop the RTSP server
+            this.stopService(new Intent(this, RtspServerService.class));
+            mimageView.setImageResource(0);
+            mButtonStart.setImageResource(R.drawable.icon_audio);
+
         }
     }
 
@@ -212,20 +175,12 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onSessionStarted() {
-        enableUI();
-        mButtonStart.setImageResource(R.drawable.icon_audio_active);
-        String url= URL();
-        putQR(url);
-        Toast.makeText(MainActivity.this,url,Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     public void onSessionStopped() {
-        // stop the RTSP server
-        this.stopService(new Intent(this, RtspServer.class));
-        mimageView.setImageResource(0);
-        enableUI();
-        mButtonStart.setImageResource(R.drawable.icon_audio);
+
     }
 
     @Override
@@ -254,14 +209,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onRtspUpdate(int message, Exception e) {
-        switch (message) {
-            case RtspClient.ERROR_CONNECTION_FAILED:
-            case RtspClient.ERROR_WRONG_CREDENTIALS:
-                enableUI();
-                logError(e.getMessage());
-                e.printStackTrace();
-                break;
-        }
+
     }
 
 
@@ -272,12 +220,11 @@ public class MainActivity extends Activity implements
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mSession.startPreview();
+        //mSession.startPreview();
     }
-
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        mClient.stopStream();
+        //mClient.stopStream();
     }
 
     public String URL(){

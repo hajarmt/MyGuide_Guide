@@ -30,6 +30,7 @@
         </activity>
 
         <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer" />
+        <service android:name=".RtspServerService" />
     </application>
 
 </manifest>
