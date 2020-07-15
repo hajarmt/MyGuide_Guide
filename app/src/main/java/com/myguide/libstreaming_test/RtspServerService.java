@@ -6,12 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
-import net.majorkernelpanic.streaming.SessionBuilder;
-import net.majorkernelpanic.streaming.audio.AudioQuality;
 import net.majorkernelpanic.streaming.rtsp.RtspServer;
 
 public class RtspServerService extends Service {

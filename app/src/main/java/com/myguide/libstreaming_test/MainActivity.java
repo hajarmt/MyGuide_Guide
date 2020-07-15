@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +34,7 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 import android.graphics.Bitmap;
 import android.widget.Toast;
-
+import com.tooltip.Tooltip;
 
 import com.google.zxing.WriterException;
 
@@ -52,6 +53,7 @@ public class MainActivity extends Activity implements
     private Session mSession;
     private RtspClient mClient;
     private ImageView mimageView;
+    int count_click = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,14 @@ public class MainActivity extends Activity implements
     // Connects/disconnects to the RTSP server and starts/stops the stream
     public void toggleStream() {
         if (!mClient.isStreaming()) {
+            if(count_click<1){
+                count_click++;
+                Toast.makeText(MainActivity.this,"Click again to start streaming",Toast.LENGTH_LONG).show();
+                // start the RTSP server
+                this.startService(new Intent(this, RtspServerService.class));
+            }
+            else{
+                count_click=0;
                 String ip,port,path;
                 // We save the content user inputs in Shared Preferences
                 SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
@@ -118,7 +128,6 @@ public class MainActivity extends Activity implements
                 editor.putString("password", "");
                 editor.putString("username", "");
                 editor.commit();
-
                 // We parse the URI written in the Editext
                 Pattern uri = Pattern.compile("rtsp://(.+):(\\d*)/(.+)");
                 Matcher m = uri.matcher("rtsp://127.0.0.1:9999/test"); m.find();
@@ -128,20 +137,20 @@ public class MainActivity extends Activity implements
 
                 mClient.setServerAddress(ip, Integer.parseInt(port));
                 mClient.setStreamPath("/"+path);
-                // start the RTSP server
-                this.startService(new Intent(this, RtspServerService.class));
                 mClient.startStream();
                 mButtonStart.setImageResource(R.drawable.icon_audio_active);
+                //generating qr
                 String url= URL();
                 putQR(url);
-                Toast.makeText(MainActivity.this,url,Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,url,Toast.LENGTH_LONG).show();
+            }
 
         } else {
             // Stops the stream and disconnects from the RTSP server
             mClient.stopStream();
             // stop the RTSP server
             this.stopService(new Intent(this, RtspServerService.class));
-            mimageView.setImageResource(0);
+            mimageView.setImageResource(R.drawable.qr_bef_str);
             mButtonStart.setImageResource(R.drawable.icon_audio);
 
         }
