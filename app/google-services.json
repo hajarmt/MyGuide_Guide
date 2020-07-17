@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1082437785994",
+    "firebase_url": "https://appstreaming-c5c9e.firebaseio.com",
+    "project_id": "appstreaming-c5c9e",
+    "storage_bucket": "appstreaming-c5c9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082437785994:android:caa3fe5ade16ead8c65073",
+        "android_client_info": {
+          "package_name": "com.myguide.libstreaming_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082437785994-ndcftnb1di42a6a0rd3qco2u2ko3p65d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMmbtYeq-Kt5ty6jEtnLvSGWP-rdbOMwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082437785994-ndcftnb1di42a6a0rd3qco2u2ko3p65d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

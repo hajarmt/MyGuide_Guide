@@ -2,7 +2,11 @@ package com.myguide.libstreaming_test;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.text.format.Formatter;
 import net.majorkernelpanic.streaming.MediaStream;
 import net.majorkernelpanic.streaming.Session;
@@ -34,6 +38,9 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 import android.graphics.Bitmap;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+
 import com.tooltip.Tooltip;
 
 import com.google.zxing.WriterException;
@@ -61,6 +68,27 @@ public class MainActivity extends Activity implements
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
+
+        //ask for permissions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                },1);
+            }
+        }
+
+        //start sharing position
+        this.startService(new Intent(this, LastLocationService.class));
 
         //get by id
         mimageView= (ImageView) findViewById(R.id.img_qr);
