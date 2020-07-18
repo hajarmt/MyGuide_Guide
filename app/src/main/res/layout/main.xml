@@ -55,16 +55,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <TextView
-        android:id="@+id/bitrate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:padding="5dp"
-        android:text="@string/default_bitrate"
-        android:textColor="@android:color/black" />
-
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,12 +63,38 @@
 
         <LinearLayout
             android:id="@+id/layout"
-            android:layout_width="wrap_content"
+            android:layout_width="398dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="42dp"
+                android:layout_height="79dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/bitrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/default_bitrate"
+                    android:textColor="@android:color/black" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="4dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -88,20 +104,59 @@
                     android:layout_height="17dp"
                     android:layout_weight="1" />
 
+                <ImageButton
+                    android:id="@+id/start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/start"
+                    android:src="@drawable/icon_audio"
+                    android:text="@string/start" />
+
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="13dp"
                     android:layout_weight="1" />
+
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/start"
-                android:src="@drawable/icon_audio"
-                android:text="@string/start" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:gravity="center"
+                    android:margin="5px"
+                    android:text="Share my location"
+                    android:textColor="#514A9D" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:orientation="horizontal">
+
+                    <Switch
+                        android:id="@+id/swShareLocation"
+                        android:layout_width="86dp"
+                        android:layout_height="39dp"
+                        android:layout_weight="1"
+                        android:theme="@style/SCBSwitch" />
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/myLocation" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </FrameLayout>

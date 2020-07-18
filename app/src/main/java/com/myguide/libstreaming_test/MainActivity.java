@@ -29,10 +29,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -55,6 +57,7 @@ public class MainActivity extends Activity implements
 
 
     private ImageButton mButtonStart;
+    private Switch mSwitch;
     private SurfaceView mSurfaceView;
     private TextView mTextBitrate;
     private Session mSession;
@@ -72,14 +75,12 @@ public class MainActivity extends Activity implements
         //ask for permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                     checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                     checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                     checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
             ) {
                 ActivityCompat.requestPermissions(this, new String[]{
                         Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION
@@ -87,16 +88,30 @@ public class MainActivity extends Activity implements
             }
         }
 
-        //start sharing position
-        this.startService(new Intent(this, LastLocationService.class));
-
         //get by id
         mimageView= (ImageView) findViewById(R.id.img_qr);
         mButtonStart = (ImageButton) findViewById(R.id.start);
         mSurfaceView = (SurfaceView) findViewById(R.id.surface);
         mTextBitrate = (TextView) findViewById(R.id.bitrate);
+        mSwitch= (Switch) findViewById(R.id.swShareLocation);
 
         mButtonStart.setOnClickListener(this);
+
+        //location tracking enable/desable
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    //start sharing position
+                    startService(new Intent(getApplicationContext(), LastLocationService.class));
+                } else {
+                    // The toggle is disabled
+                    //stop sharing position
+                    stopService(new Intent(getApplicationContext(), LastLocationService.class));
+                }
+            }
+        });
 
         //SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         // Configures the SessionBuilder

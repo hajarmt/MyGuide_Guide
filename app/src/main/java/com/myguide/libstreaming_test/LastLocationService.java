@@ -12,27 +12,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firestore.v1.WriteResult;
+import com.google.type.LatLng;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.myguide.libstreaming_test.MainActivity.TAG;
 
 public class LastLocationService extends Service {
 
@@ -41,8 +30,7 @@ public class LastLocationService extends Service {
     private DocumentReference LastLocation = db.collection("guides").document(guide);
     private LocationListener listener;
     private LocationManager locationManager;
-    private Map<String, Location> Location = new HashMap<>();
-    private Map<String, String> test = new HashMap<>();
+    private Map<String,Location> Location = new HashMap<>();
 
     @Nullable
     @Override
@@ -54,15 +42,13 @@ public class LastLocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        //Toast.makeText(getApplicationContext(),"servise started",Toast.LENGTH_LONG).show();
-        LastLocation.set(test);
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 //last Location
-                Location.put("LastLocation", location);
+                Location.put("lastLocation",location);
                 LastLocation.set(Location);
-                Toast.makeText(getApplicationContext(),Location+"",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),Location+"",Toast.LENGTH_LONG).show();
             }
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
