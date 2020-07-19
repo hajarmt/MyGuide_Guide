@@ -56,14 +56,14 @@
     </ScrollView>
 
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:id="@+id/layout"
-            android:layout_width="398dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -129,9 +129,8 @@
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:margin="5px"
                     android:text="Share my location"
                     android:textColor="#514A9D" />
 
@@ -143,16 +142,23 @@
                     <Switch
                         android:id="@+id/swShareLocation"
                         android:layout_width="86dp"
-                        android:layout_height="39dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:theme="@style/SCBSwitch" />
+                        android:theme="@style/witch" />
 
-                    <ImageView
-                        android:id="@+id/imageView"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/myLocation" />
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/mylocation" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
