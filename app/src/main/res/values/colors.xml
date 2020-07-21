@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-  <color name="colorPrimary">#3F51B5</color>
-  <color name="colorPrimaryDark">#303F9F</color>
-  <color name="colorAccent">#B9BBBD</color>
+  <color name="colorPrimary">#514A9D</color>
+  <color name="colorPrimaryLight">#25C3DB</color>
+  <color name="colorPrimarydark">#905276</color>
+  <color name="colorPrimaryDark">#0061E4</color>
+
   <color name="colorfirstpage">#333C46</color>
   <color name="colorBackground">#0b507b</color>
+
   <color name="colorSplashText">#F0F0F0</color>
   <color name="colorProgressBar">#FFCE511C</color>
   <color name="colorTextView">#83898E</color>
 
+  <color name="colorAccent">#339EC7</color>
+  <color name="colorload">#C5CFDF</color>
+  <color name="colorloadt">#90718F</color>
   <color name="themeColor">#3F51B5</color>
 
   <!--normal colors-->
@@ -30,4 +36,6 @@
         android:centerY="0.3"
         android:angle="270" />
   </color>
+
+    <color name="colorBar">#514A9D</color>
 </resources>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">myGuide_guide</string>
+    <string name="app_name">MyGuide:guide</string>
     <string name="start">Start/Stop Streaming</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="uri">URI</string>
     <string name="default_bitrate">0 kbps</string>
+    <string name="application_guide" translatable="false">Guide Application</string>
 
 </resources>

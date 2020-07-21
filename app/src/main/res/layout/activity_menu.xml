@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    tools:context=".Menu">
+
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/kech" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="21dp"
+            android:orientation="vertical">
+
+
+            <net.majorkernelpanic.streaming.gl.SurfaceView
+                android:id="@+id/surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/bitrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/default_bitrate"
+                android:textColor="@android:color/black" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/whiteTextColor"
+            android:orientation="horizontal">
+
+            <com.irozon.justbar.JustBar
+                android:id="@+id/bottomBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <com.irozon.justbar.BarItem
+                    android:id="@+id/swShareLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:icon="@drawable/ic_location"
+                    app:radius="25dp" />
+
+                <com.irozon.justbar.BarItem
+                    android:id="@+id/start"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:icon="@drawable/ic_mic_on"
+                    app:radius="25dp" />
+
+                <com.irozon.justbar.BarItem
+                    android:id="@+id/stop"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:icon="@drawable/ic_mic_off"
+                    app:radius="25dp" />
+
+                <com.irozon.justbar.BarItem
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:icon="@drawable/ic_qr_code"
+                    app:radius="25dp" />
+
+            </com.irozon.justbar.JustBar>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_qr"
+            android:layout_width="315dp"
+            android:layout_height="315dp"
+            android:layout_above="@+id/toolBar"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="47dp"
+            android:layout_marginLeft="47dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginEnd="120dp"
+            android:layout_marginRight="47dp" />
+
+    </LinearLayout>
+
+</FrameLayout>
