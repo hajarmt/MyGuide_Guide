@@ -7,21 +7,23 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     android:orientation="vertical"
+    android:background="@color/whiteTextColor"
     tools:context=".Menu">
-
 
     <ImageView
         android:id="@+id/background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/kech" />
+        android:background="@drawable/kech"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
         android:orientation="vertical">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,11 +50,10 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/toolBar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/whiteTextColor"
             android:orientation="horizontal">
@@ -60,8 +61,8 @@
             <com.irozon.justbar.JustBar
                 android:id="@+id/bottomBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_height="60dp"
+                android:layout_marginBottom="5dp">
 
                 <com.irozon.justbar.BarItem
                     android:id="@+id/swShareLocation"
@@ -94,24 +95,25 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/img_qr"
-            android:layout_width="315dp"
-            android:layout_height="315dp"
-            android:layout_above="@+id/toolBar"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="47dp"
-            android:layout_marginLeft="47dp"
-            android:layout_marginTop="150dp"
-            android:layout_marginEnd="120dp"
-            android:layout_marginRight="47dp" />
+
 
     </LinearLayout>
-
-</FrameLayout>
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <ImageView
+        android:id="@+id/img_qr"
+        android:layout_width="315dp"
+        android:layout_height="315dp"
+        android:layout_above="@+id/toolBar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        />
+    </LinearLayout>
+    </FrameLayout>

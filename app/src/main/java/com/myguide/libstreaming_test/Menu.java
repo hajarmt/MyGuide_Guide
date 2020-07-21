@@ -118,6 +118,8 @@ public class Menu extends Activity implements
                     {
                         mimageView.setVisibility(View.VISIBLE);
                         imageViewBackground.setVisibility(View.INVISIBLE);
+                    }else{
+                        Toast.makeText(Menu.this, "Start streaming to view QR", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
