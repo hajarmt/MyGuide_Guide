@@ -283,7 +283,7 @@ public class MainActivity extends Activity implements
     public String URL(){
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
-        String URL= "rtsp://"+ipAddress+":1234/test";
+        String URL= "rtsp://"+ipAddress+":9999/test";
         return URL;
     }
     public void putQR(String URL){
