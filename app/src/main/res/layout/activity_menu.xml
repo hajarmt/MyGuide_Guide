@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:background="@color/whiteTextColor"
+    android:background="@color/whiteColor"
     tools:context=".Menu">
 
     <ImageView
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/whiteTextColor"
+            android:background="@color/whiteColor"
             android:orientation="horizontal">
 
             <com.irozon.justbar.JustBar
