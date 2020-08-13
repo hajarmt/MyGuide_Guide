@@ -86,6 +86,7 @@
                     app:radius="25dp" />
 
                 <com.irozon.justbar.BarItem
+                    android:id="@+id/qrCode"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:icon="@drawable/ic_qr_code"
@@ -98,6 +99,7 @@
 
 
     </LinearLayout>
+
     <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -116,4 +118,27 @@
         android:layout_gravity="center"
         />
     </LinearLayout>
-    </FrameLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/stream"
+        android:layout_width="331dp"
+        android:layout_height="307dp"
+        android:layout_gravity="center"
+        android:layout_weight="4"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/microphone" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/location"
+        android:layout_width="331dp"
+        android:layout_height="307dp"
+        android:layout_gravity="center"
+        android:layout_weight="4"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/location" />
+
+</FrameLayout>

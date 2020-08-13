@@ -37,6 +37,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.3.1'
 
     implementation 'com.irozon.justbar:justbar:1.0.1'
+    implementation 'com.github.amlcurran.showcaseview:library:5.4.3'
+    implementation 'com.airbnb.android:lottie:3.4.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

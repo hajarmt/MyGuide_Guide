@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">MyGuide:guide</string>
-    <string name="start">Start/Stop Streaming</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="uri">URI</string>
     <string name="default_bitrate">0 kbps</string>
     <string name="application_guide" translatable="false">Guide Application</string>
 
+    <string name="location" translatable="true">Share Location :\n</string>
+    <string name="start" translatable="true">Start Streaming :\n</string>
+    <string name="stop" translatable="true">Stop Streaming :\n</string>
+    <string name="qrCode" translatable="true">Qr Code :\n</string>
+
+    <string name="tab">\t\t\t </string>
+    <string name="locationDetail" translatable="true">Click here to share your location with the tourists</string>
+    <string name="startDetail" translatable="true">Click here TWICE to start the streaming, you can then talk through your phone and the tourists will hear you through theirs</string>
+    <string name="stopDetail" translatable="true">Click here to stop the streaming</string>
+    <string name="qrCodeDetail" translatable="true">Click here to show the generated QR code to be scanned by the tourists, so they can start receiving your streaming</string>
 </resources>

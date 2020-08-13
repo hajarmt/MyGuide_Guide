@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.irozon.justbar:justbar:1.0.1@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f7e72c6ced4757ae8c4933914266c8b0/jetified-justbar-1.0.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f7e72c6ced4757ae8c4933914266c8b0/jetified-justbar-1.0.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f7e72c6ced4757ae8c4933914266c8b0/jetified-justbar-1.0.1/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.irozon.justbar/justbar/1.0.1/f52f0923039a8cb2dca3c97f47543f8bf0cdfa45/justbar-1.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.irozon.justbar/justbar/1.0.1/87279577aba1a245506139d9d637fead57cfec1d/justbar-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
